@@ -1,15 +1,26 @@
-﻿# CMakeList.txt: файл проекта CMake верхнего уровня; проведите глобальную конфигурацию
-# и включите сюда подпроекты.
-#
-cmake_minimum_required (VERSION 3.10)
-
-# Включение горячей перезагрузки для компиляторов MSVC, если поддерживается.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif()
+﻿cmake_minimum_required (VERSION 3.14)
 
 project ("Cpp_LAB_3")
 
-# Включите подпроекты.
-add_subdirectory ("Cpp_LAB_3")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/heads/main.zip
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+add_executable (matrix_tests "tests/Matrix_Tests.cpp" "tests/SquareMatrix_Tests.cpp" "tests/DiagonalMatrix_Tests.cpp" "tests/TriangleMatrix_Tests.cpp")
+
+target_include_directories(matrix_tests PRIVATE 
+    "src"
+    "src/Lab 2"
+)
+
+target_link_libraries(matrix_tests PRIVATE GTest::gtest_main)
+
+include(GoogleTest)
+gtest_discover_tests(matrix_tests)

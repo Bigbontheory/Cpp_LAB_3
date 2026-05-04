@@ -1,10 +1,7 @@
-#include <stdexcept>
-#include "Matrix.hpp"
-#include <cmath>
 
 template <typename T>
 int Matrix<T>::check_index(int r, int c) {
-    if (r <= 0 || c <= 0) {
+    if (r < 0 || c < 0) {
         throw std::invalid_argument("Matrix dimensions must be positive!");
     }
     return r * c;
@@ -13,6 +10,11 @@ int Matrix<T>::check_index(int r, int c) {
 template <typename T> 
 bool Matrix<T> ::check_bounds(int i, int j) const noexcept {
     return(i >= 0 && i < rows && j >= 0 && j < cols);
+}
+
+template <typename T>
+bool Matrix<T>::check_row(int r) const noexcept {
+    return r >= 0 && r < rows;
 }
 
 template <typename T>
@@ -65,9 +67,9 @@ int Matrix<T>::get_cols() const {
 template <typename T>
 const T& Matrix<T>::get(int i, int j) const {
     if (!check_bounds(i, j)) {
-        throw std::invalid_argument("Matrix index out of bounds");s
+        throw std::invalid_argument("Matrix index out of bounds");
     }
-    return data.get(coils * i + j);
+    return data.get(cols * i + j);
 }
 
 template <typename T>
@@ -75,7 +77,7 @@ void Matrix<T>::set(int i, int j, const T& value) {
     if (!check_bounds(i, j)) {
         throw std::invalid_argument("Matrix out of bonds");
     }
-    return data.set(coils * i + j, value);
+    data.set(cols * i + j, value);
 }
 
 template <typename T>
@@ -90,7 +92,7 @@ double Matrix<T>::norm() const {
 }
 
 template <typename T>
-Matrix<T>* Matrix<T>::mult_scalar(T scalar) const {
+Matrix<T>* Matrix<T>::mult_scalar(const T scalar) const {
     Matrix<T>* result = nullptr;
     try {
         result = new Matrix<T>(rows, cols);
@@ -119,9 +121,9 @@ Matrix<T>* Matrix<T>::add(const IMatrix<T>* other) const {
     }
 
     Matrix<T>* result = nullptr;
-    
+
     try {
-        reslut = new Matrix<T>(rows, cols);
+        result = new Matrix<T>(rows, cols);
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
                 T sum_val = this->get(i, j) + other->get(i, j);
@@ -136,14 +138,39 @@ Matrix<T>* Matrix<T>::add(const IMatrix<T>* other) const {
     return result;
 }
 
-template<typename T>
-Matrix<T>* Matrix<T>::clone() const {
-
+template <typename T>
+void Matrix<T>::swap_rows(int row1, int row2) {
+    if (!this->check_row(row1) || !this->check_row(row2)) {
+        throw std::out_of_range("Row index out of bounds");
+    }
+    if (row1 == row2) return;
+    for (int j = 0; j < cols; ++j) {
+        T temp = this->get(row1, j);
+        this->set(row1, j, this->get(row2, j));
+        this->set(row2, j, temp);
+    }
 }
 
 template <typename T>
-I
+void Matrix<T>::scale_row(int row, const T& scalar) {
+    if (!this->check_row(row)) {
+        throw std::out_of_range("Row index out of bounds");
+    }
+    for (int j = 0; j < cols; ++j) {
+        this->set(row, j, this->get(row, j) * scalar);
+    }
+}
 
-// не связано с лабой, просто записть, далеко obsidian, при переопределени типов имеем право исопльвоать дочернкий кла
+template <typename T>
+void Matrix<T>::add_row(int row1, int row2, const T& scalar) {
+    if (!this->check_row(row1) || !this->check_row(row2)) {
+        throw std::out_of_range("Row index out of bounds");
+    }
 
+    for (int j = 0; j < cols; ++j) {
+        T val1 = this->get(row1, j);
+        T val2 = this->get(row2, j);
+        this->set(row2, j, val2 + (val1 * scalar));
+    }
+}
 
