@@ -10,9 +10,6 @@ private:
 	DynamicArray<T> data;
 	static int check_index(int r, int c);
 	bool check_bounds(int r, int c) const noexcept;
-
-protected:
-	bool check_row(int r) const noexcept; // долждна быть в 
 	int rows;
 	int cols;
 
@@ -33,9 +30,13 @@ public:
 	Matrix<T>* mult_scalar(const T scalar) const override;
 	Matrix<T>* add(const IMatrix<T>* other) const override;
 
+
 	void swap_rows(int row1, int row2);
 	void scale_row(int row, const T& scalar);
 	void add_row(int row1, int row2, const T& scalar);
+
+protected:
+	bool check_row(int r) const noexcept;
 };
 
 #include "Matrix.tpp"

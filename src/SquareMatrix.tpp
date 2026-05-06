@@ -24,7 +24,7 @@ SquareMatrix<T>::SquareMatrix(const SquareMatrix<T>& other)
 
 template <typename T>
 int SquareMatrix<T>::get_size() const {
-    return this->rows;
+    return this->get_rows();
 }
 
 template <typename T>

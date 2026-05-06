@@ -5,7 +5,7 @@
 #include "SquareMatrix.hpp"
 #include <stdexcept>
 
-enum class TriangleType { //enum внутрь класса
+enum class TriangleType {
 	Lower,
 	Upper
 };
@@ -13,6 +13,7 @@ enum class TriangleType { //enum внутрь класса
 template<typename T>
 class TriangleMatrix : public IMatrix<T> {
 public:
+
 	TriangleMatrix(int n, TriangleType type);
 	TriangleMatrix(const T* items, int n, TriangleType type);
 	TriangleMatrix(const TriangleMatrix<T>& other);
@@ -31,6 +32,7 @@ public:
 	SquareMatrix<T>* add(const IMatrix<T>* other) const override;
 	TriangleMatrix<T>* mult_scalar(T scalar) const override;
 
+
 private:
 	DynamicArray<T> data;
 	int size;
@@ -42,6 +44,9 @@ private:
 	bool is_in_triangle(int i, int j) const;
 	void check_bounds(int i, int j) const;
 	static int checked_size(int size);
+
+
+
 };
 
 #include "TriangleMatrix.tpp"
