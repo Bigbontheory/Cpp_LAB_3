@@ -19,7 +19,6 @@ void printAnyMatrix(const IMatrix<double>* mat, int id) {
 }
 
 int main() {
-    // Хранилище указателей на матрицы (используем твой DynamicArray)
     DynamicArray<IMatrix<double>*> storage;
     int choice = -1;
 
@@ -37,7 +36,7 @@ int main() {
 
         try {
             switch (choice) {
-            case 1: { // СОЗДАНИЕ
+            case 1: { 
                 int type, n, m;
                 std::cout << "Select Type (1:Gen, 2:Sq, 3:Tri, 4:Diag): ";
                 std::cin >> type;
@@ -78,14 +77,14 @@ int main() {
                 break;
             }
 
-            case 2: { // ПРОСМОТР
+            case 2: { 
                 int id; std::cout << "Enter ID: "; std::cin >> id;
                 if (id >= 0 && id < storage.get_size()) printAnyMatrix(storage.get(id), id);
                 else std::cout << "Invalid ID!\n";
                 break;
             }
 
-            case 3: { // ОБЩИЕ ОПЕРАЦИИ (есть у всех через IMatrix)
+            case 3: { 
                 int id1; std::cout << "Enter ID: "; std::cin >> id1;
                 IMatrix<double>* m = storage.get(id1);
 
@@ -112,11 +111,11 @@ int main() {
                 break;
             }
 
-            case 4: { // СПЕЦИФИЧНЫЕ ОПЕРАЦИИ (только то, что есть в .hpp)
+            case 4: {
                 int id; std::cout << "Enter ID: "; std::cin >> id;
                 IMatrix<double>* m = storage.get(id);
 
-                // 1. Проверка на Matrix (включая SquareMatrix) для Row Ops
+                
                 auto* gen = dynamic_cast<Matrix<double>*>(m);
                 if (gen) {
                     int rowOp; std::cout << "Row Ops (1:Swap, 2:Scale, 3:AddRow, 0:Skip): "; std::cin >> rowOp;
@@ -125,26 +124,25 @@ int main() {
                     else if (rowOp == 3) { int r1, r2; double s; std::cin >> r1 >> r2 >> s; gen->add_row(r1, r2, s); }
                 }
 
-                // 2. Проверка на SquareMatrix для trace()
                 auto* sq = dynamic_cast<SquareMatrix<double>*>(m);
                 if (sq) std::cout << "Trace: " << sq->trace() << "\n";
 
-                // 3. Проверка на TriangleMatrix для get_type()
+          
                 auto* tri = dynamic_cast<TriangleMatrix<double>*>(m);
                 if (tri) std::cout << "Triangle Type: " << (tri->get_type() == TriangleType::Lower ? "Lower" : "Upper") << "\n";
 
-                // 4. Проверка на DiagonalMatrix (у неё только get_size)
+              
                 auto* diag = dynamic_cast<DiagonalMatrix<double>*>(m);
                 if (diag) std::cout << "Diagonal Size: " << diag->get_size() << "\n";
 
                 break;
             }
 
-            case 5: { // УДАЛЕНИЕ
+            case 5: { 
                 int id; std::cout << "Enter ID: "; std::cin >> id;
                 if (id >= 0 && id < storage.get_size()) {
                     delete storage.get(id);
-                    storage.set(id, nullptr); // Чтобы не было висячего указателя
+                    storage.set(id, nullptr); 
                     std::cout << "Memory cleared.\n";
                 }
                 break;
@@ -156,7 +154,7 @@ int main() {
         }
     }
 
-    // Очистка при выходе
+ 
     for (int i = 0; i < storage.get_size(); ++i) {
         delete storage.get(i);
     }
