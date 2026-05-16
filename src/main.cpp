@@ -1,15 +1,12 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-
-// Заголовочные файлы из твоего проекта
 #include "Matrix.hpp"
 #include "SquareMatrix.hpp"
 #include "TriangleMatrix.hpp"
 #include "DiagonalMatrix.hpp"
 #include "DynamicArray.hpp"
 
-// Функция для вывода любой матрицы через базовый интерфейс
 void printAnyMatrix(const IMatrix<double>* mat, int id) {
     if (!mat) return;
     std::cout << "\n[ID: " << id << "] Size: " << mat->get_rows() << "x" << mat->get_cols() << "\n";
