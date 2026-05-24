@@ -5,18 +5,21 @@
 #include "SquareMatrix.hpp"
 #include <stdexcept>
 
-enum class TriangleType {
-	Lower,
-	Upper
-};
+
 
 template<typename T>
 class TriangleMatrix : public IMatrix<T> {
 public:
 
+	enum class TriangleType {
+		Lower,
+		Upper
+	};
+
 	TriangleMatrix(int n, TriangleType type);
 	TriangleMatrix(const T* items, int n, TriangleType type);
 	TriangleMatrix(const TriangleMatrix<T>& other);
+	TriangleMatrix<T>& operator=(const TriangleMatrix<T>& other) = default;
 
 	virtual ~TriangleMatrix() = default;
 

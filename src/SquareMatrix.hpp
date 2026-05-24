@@ -3,6 +3,7 @@
 #include "Matrix.hpp"
 #include <stdexcept>
 
+
 template<typename T>
 class SquareMatrix : public Matrix<T> {
 public:
@@ -18,6 +19,7 @@ public:
 
 	SquareMatrix<T>* add(const IMatrix<T>* other) const override;
 	SquareMatrix<T>* mult_scalar(const T scalar) const override;
+
 };
 
 #include "SquareMatrix.tpp"

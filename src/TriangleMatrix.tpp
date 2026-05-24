@@ -1,4 +1,3 @@
-#include "TriangleMatrix.hpp"
 
 template<typename T>
 void TriangleMatrix<T>::check_bounds(int i, int j) const {
@@ -87,7 +86,7 @@ int TriangleMatrix<T>::get_size() const {
 }
 
 template<typename T>
-TriangleType TriangleMatrix<T>::get_type() const {
+typename TriangleMatrix<T>::TriangleType TriangleMatrix<T>::get_type() const {
     return type;
 }
 
