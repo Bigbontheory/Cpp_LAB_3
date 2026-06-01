@@ -4,12 +4,9 @@ project("Cpp_LAB_3")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Указываем правильные пути к папкам с хедерами
 # Судя по скрину, они в src и src/Lab 2
 set(SOURCE_DIRS "src" "src/Lab 2")
 
-# --- Секция приложения (UI) ---
-# ВАЖНО: указываем путь src/main.cpp, так как он лежит в папке src
 add_executable(matrix_app "src/main.cpp")
 
 target_include_directories(matrix_app PRIVATE ${SOURCE_DIRS})
@@ -23,7 +20,6 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# Проверь, что файлы тестов лежат в корневой папке tests/
 add_executable(matrix_tests 
     "tests/Matrix_Tests.cpp" 
     "tests/SquareMatrix_Tests.cpp" 
