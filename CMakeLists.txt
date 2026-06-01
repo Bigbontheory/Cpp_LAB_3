@@ -4,7 +4,7 @@ project("Cpp_LAB_3")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Судя по скрину, они в src и src/Lab 2
+
 set(SOURCE_DIRS "src" "src/Lab 2")
 
 add_executable(matrix_app "src/main.cpp")
