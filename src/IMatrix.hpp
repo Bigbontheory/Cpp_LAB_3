@@ -13,7 +13,7 @@ public:
 
 	const T& operator()(int i, int j) const { return get(i, j) };
 
-	virtual double norm() const = 0; // не только double
+	virtual double norm() const = 0;
 	virtual IMatrix<T>* mult_scalar(T scalar) const = 0;
 	virtual IMatrix<T>* add(const IMatrix<T>* other) const = 0;
 };
