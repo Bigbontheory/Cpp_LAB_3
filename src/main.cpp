@@ -8,6 +8,7 @@
 #include "DiagonalMatrix.hpp"
 #include "SparseMatrix.hpp"
 #include "DynamicArray.hpp"
+#include "Vector.hpp"
 
 void printAnyMatrix(const IMatrix<double>* mat, int id) {
     if (!mat) return;
@@ -232,13 +233,127 @@ void handleDeleteMatrix(DynamicArray<IMatrix<double>*>& storage) {
     }
 }
 
-void printMenu(int storageSize) {
-    std::cout << "\n=== MATRIX UI (Count: " << storageSize << ") ===\n";
+void handleCreateVector(DynamicArray<Vector<double>*>& vecStorage) {
+    int n;
+    std::cout << "Enter Vector size: ";
+    std::cin >> n;
+
+    Vector<double>* newVec = new Vector<double>(n);
+    std::cout << "Enter " << n << " values:\n";
+    for (int i = 0; i < n; ++i) {
+        double val;
+        std::cout << "  [" << i << "]: ";
+        std::cin >> val;
+        newVec->set(val, i);
+    }
+
+    int idx = vecStorage.get_size();
+    vecStorage.resize(idx + 1);
+    vecStorage.set(idx, newVec);
+    std::cout << "Vector added with ID: " << idx << "\n";
+}
+
+void handleViewVector(const DynamicArray<Vector<double>*>& vecStorage) {
+    int id;
+    std::cout << "Enter Vector ID: ";
+    std::cin >> id;
+    if (id >= 0 && id < vecStorage.get_size() && vecStorage.get(id) != nullptr) {
+        Vector<double>* v = vecStorage.get(id);
+        std::cout << "\n[Vector ID: " << id << "] Size: " << v->get_size() << "\n[ ";
+        for (int i = 0; i < v->get_size(); ++i) {
+            std::cout << std::setw(8) << std::fixed << std::setprecision(2) << v->get(i) << " ";
+        }
+        std::cout << "]\n";
+    }
+    else {
+        std::cout << "Invalid Vector ID or vector deleted!\n";
+    }
+}
+
+void handleVectorOperations(DynamicArray<Vector<double>*>& vecStorage) {
+    int id1;
+    std::cout << "Enter Vector ID: ";
+    std::cin >> id1;
+    if (id1 < 0 || id1 >= vecStorage.get_size() || vecStorage.get(id1) == nullptr) {
+        std::cout << "Invalid ID!\n";
+        return;
+    }
+
+    Vector<double>* v1 = vecStorage.get(id1);
+    int op;
+    std::cout << "1: Add, 2: Subtract, 3: Mult Scalar, 4: Dot Product, 5: Norm: ";
+    std::cin >> op;
+
+    if (op == 1 || op == 2 || op == 4) {
+        int id2;
+        std::cout << "Enter second Vector ID: ";
+        std::cin >> id2;
+        if (id2 < 0 || id2 >= vecStorage.get_size() || vecStorage.get(id2) == nullptr) {
+            std::cout << "Invalid second ID!\n";
+            return;
+        }
+        Vector<double>* v2 = vecStorage.get(id2);
+
+        if (op == 1) {
+            Vector<double>* res = new Vector<double>(*v1 + *v2);
+            int idx = vecStorage.get_size();
+            vecStorage.resize(idx + 1);
+            vecStorage.set(idx, res);
+            std::cout << "Result saved as Vector ID: " << idx << "\n";
+        }
+        else if (op == 2) {
+            Vector<double>* res = new Vector<double>(*v1 - *v2);
+            int idx = vecStorage.get_size();
+            vecStorage.resize(idx + 1);
+            vecStorage.set(idx, res);
+            std::cout << "Result saved as Vector ID: " << idx << "\n";
+        }
+        else if (op == 4) {
+            std::cout << "Dot Product: " << v1->dot(*v2) << "\n";
+        }
+    }
+    else if (op == 3) {
+        double s;
+        std::cout << "Scalar: ";
+        std::cin >> s;
+        Vector<double>* res = new Vector<double>(*v1 * s);
+        int idx = vecStorage.get_size();
+        vecStorage.resize(idx + 1);
+        vecStorage.set(idx, res);
+        std::cout << "Result saved as Vector ID: " << idx << "\n";
+    }
+    else if (op == 5) {
+        std::cout << "Norm: " << v1->norm() << "\n";
+    }
+}
+
+void handleDeleteVector(DynamicArray<Vector<double>*>& vecStorage) {
+    int id;
+    std::cout << "Enter Vector ID: ";
+    std::cin >> id;
+    if (id >= 0 && id < vecStorage.get_size() && vecStorage.get(id) != nullptr) {
+        delete vecStorage.get(id);
+        vecStorage.set(id, nullptr);
+        std::cout << "Vector memory cleared.\n";
+    }
+    else {
+        std::cout << "Invalid ID or already deleted.\n";
+    }
+}
+
+void printMenu(int matrixCount, int vectorCount) {
+    std::cout << "\n=== MATRIX & VECTOR UI (Matrices: " << matrixCount << ", Vectors: " << vectorCount << ") ===\n";
+    std::cout << "--- Matrices ---\n";
     std::cout << "1. Create Matrix\n";
     std::cout << "2. View Matrix by ID\n";
-    std::cout << "3. Common Operations (Add, Mult Scalar, Norm)\n";
-    std::cout << "4. Specific Operations\n";
+    std::cout << "3. Common Matrix Operations (Add, Mult Scalar, Norm)\n";
+    std::cout << "4. Specific Matrix Operations\n";
     std::cout << "5. Delete Matrix\n";
+    std::cout << "--- Vectors ---\n";
+    std::cout << "6. Create Vector\n";
+    std::cout << "7. View Vector by ID\n";
+    std::cout << "8. Vector Operations (Add, Sub, Mult Scalar, Dot, Norm)\n";
+    std::cout << "9. Delete Vector\n";
     std::cout << "0. Exit\n";
     std::cout << "Choice: ";
 }
@@ -246,10 +361,11 @@ void printMenu(int storageSize) {
 int main() {
     DynamicArray<IMatrix<double>*> storage;
     DynamicArray<std::string> matrixTypes;
+    DynamicArray<Vector<double>*> vectorStorage;
     int choice = -1;
 
     while (choice != 0) {
-        printMenu(storage.get_size());
+        printMenu(storage.get_size(), vectorStorage.get_size());
         if (!(std::cin >> choice)) break;
 
         try {
@@ -259,6 +375,10 @@ int main() {
             case 3: handleCommonOperations(storage, matrixTypes); break;
             case 4: handleSpecificOperations(storage, matrixTypes); break;
             case 5: handleDeleteMatrix(storage); break;
+            case 6: handleCreateVector(vectorStorage); break;
+            case 7: handleViewVector(vectorStorage); break;
+            case 8: handleVectorOperations(vectorStorage); break;
+            case 9: handleDeleteVector(vectorStorage); break;
             case 0: break;
             default: std::cout << "Unknown choice!\n"; break;
             }
@@ -271,5 +391,10 @@ int main() {
     for (int i = 0; i < storage.get_size(); ++i) {
         delete storage.get(i);
     }
+
+    for (int i = 0; i < vectorStorage.get_size(); ++i) {
+        delete vectorStorage.get(i);
+    }
+
     return 0;
 }
