@@ -3,6 +3,7 @@
 #include "DynamicArray.hpp"
 #include <stdexcept>
 #include <cmath>
+#include "Complex.hpp"
 
 template <typename T>
 class Matrix : public IMatrix<T> {

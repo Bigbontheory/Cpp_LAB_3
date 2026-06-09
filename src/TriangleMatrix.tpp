@@ -119,7 +119,12 @@ double TriangleMatrix<T>::norm() const {
 
     for (int k = 0; k < count; ++k) {
         T value = data.get(k);
-        sum_sq += static_cast<double>(value * value);
+        if constexpr (std::is_same_v<T, Complex<double>> || std::is_same_v<T, Complex<float>>) {
+            sum_sq += value.norm2();
+        }
+        else {
+            sum_sq += static_cast<double>(value * value);
+        }
     }
 
     return std::sqrt(sum_sq);

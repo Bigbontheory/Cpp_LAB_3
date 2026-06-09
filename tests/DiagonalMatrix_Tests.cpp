@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include "DiagonalMatrix.hpp"
+#include "Complex.hpp"
+
 
 TEST(DiagonalMatrixTest, Constructors) {
     DiagonalMatrix<int> m1;
@@ -64,4 +66,35 @@ TEST(DiagonalMatrixTest, Exceptions) {
 
     DiagonalMatrix<int> m(2);
     EXPECT_THROW(m.get(-1, 0), std::out_of_range);
+}
+
+TEST(DiagonalMatrixComplexTest, ArrayConstructorAndGet) {
+    Complex<double> items[] = { Complex<double>(1.0, 2.0), Complex<double>(3.0, -4.0) };
+    DiagonalMatrix<Complex<double>> m(items, 2);
+
+    EXPECT_EQ(m.get(0, 0), Complex<double>(1.0, 2.0));
+    EXPECT_EQ(m.get(1, 1), Complex<double>(3.0, -4.0));
+    EXPECT_EQ(m.get(0, 1), Complex<double>(0.0, 0.0));
+}
+
+TEST(DiagonalMatrixComplexTest, SetDiagonal) {
+    DiagonalMatrix<Complex<double>> m(2);
+    m.set(1, 1, Complex<double>(5.0, 6.0));
+    EXPECT_EQ(m.get(1, 1), Complex<double>(5.0, 6.0));
+}
+
+TEST(DiagonalMatrixComplexTest, ComplexNorm) {
+    Complex<double> items[] = { Complex<double>(3.0, 4.0) }; // abs = 5.0
+    DiagonalMatrix<Complex<double>> m(items, 1);
+    EXPECT_DOUBLE_EQ(m.norm(), 5.0);
+}
+
+TEST(DiagonalMatrixComplexTest, ComplexMultScalar) {
+    Complex<double> items[] = { Complex<double>(1.0, 2.0) };
+    DiagonalMatrix<Complex<double>> m(items, 1);
+
+    DiagonalMatrix<Complex<double>>* res = m.mult_scalar(Complex<double>(0.0, 2.0));
+    EXPECT_EQ(res->get(0, 0), Complex<double>(-4.0, 2.0)); // (1+2i)*2i = -4+2i
+
+    delete res;
 }

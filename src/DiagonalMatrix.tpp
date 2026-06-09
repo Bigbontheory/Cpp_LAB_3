@@ -73,10 +73,15 @@ void DiagonalMatrix<T>::set(int i, int j, const T& value) {
 
 template <typename T>
 double DiagonalMatrix<T>::norm() const {
-    double sum = 0;
+    double sum = 0.0;
     for (int i = 0; i < size; ++i) {
         T val = data.get(i);
-        sum += static_cast<double>(val * val);
+        if constexpr (std::is_same_v<T, Complex<double>> || std::is_same_v<T, Complex<float>>) {
+            sum += val.norm2();
+        }
+        else {
+            sum += static_cast<double>(val * val);
+        }
     }
     return std::sqrt(sum);
 }

@@ -140,3 +140,33 @@ TEST(SparseMatrixTest, AdditionDimensionsMismatchException) {
 
     EXPECT_THROW(m1.add(&m2), std::invalid_argument);
 }
+
+TEST(SparseMatrixComplexTest, SetAndGetElement) {
+    SparseMatrix<Complex<double>> m(3, 3);
+    m.set(1, 2, Complex<double>(5.0, 6.0));
+    m.set(0, 0, Complex<double>(-1.0, -2.0));
+
+    EXPECT_EQ(m.get(1, 2), Complex<double>(5.0, 6.0));
+    EXPECT_EQ(m.get(0, 0), Complex<double>(-1.0, -2.0));
+    EXPECT_EQ(m.get(2, 2), Complex<double>(0.0, 0.0));
+}
+
+TEST(SparseMatrixComplexTest, ComplexNorm) {
+    SparseMatrix<Complex<double>> m(2, 2);
+    m.set(0, 0, Complex<double>(3.0, 4.0));
+    m.set(1, 1, Complex<double>(0.0, 5.0));
+
+    EXPECT_DOUBLE_EQ(m.norm(), std::sqrt(50.0));
+}
+
+TEST(SparseMatrixComplexTest, ComplexMultScalar) {
+    SparseMatrix<Complex<double>> m(2, 2);
+    m.set(0, 1, Complex<double>(1.0, 2.0));
+
+    SparseMatrix<Complex<double>>* res = m.mult_scalar(Complex<double>(0.0, 2.0));
+
+    EXPECT_EQ(res->get(0, 1), Complex<double>(-4.0, 2.0));
+    EXPECT_EQ(res->get(0, 0), Complex<double>(0.0, 0.0));
+
+    delete res;
+}

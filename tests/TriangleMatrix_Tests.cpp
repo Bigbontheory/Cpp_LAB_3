@@ -65,3 +65,45 @@ TEST(TriangleMatrixTest, BoundsAndExceptions) {
     EXPECT_THROW(m.get(2, 2), std::out_of_range);
     EXPECT_THROW(m.get(-1, 0), std::out_of_range);
 }
+
+TEST(TriangleMatrixComplexTest, SetAndGetLower) {
+    TriangleMatrix<Complex<double>> m(3, TriangleMatrix<Complex<double>>::TriangleType::Lower);
+
+    m.set(0, 0, Complex<double>(1.0, 2.0));
+    m.set(2, 1, Complex<double>(3.0, -4.0));
+
+    EXPECT_EQ(m.get(0, 0), Complex<double>(1.0, 2.0));
+    EXPECT_EQ(m.get(2, 1), Complex<double>(3.0, -4.0));
+    EXPECT_EQ(m.get(0, 1), Complex<double>(0.0, 0.0));
+}
+
+TEST(TriangleMatrixComplexTest, SetAndGetUpper) {
+    TriangleMatrix<Complex<double>> m(3, TriangleMatrix<Complex<double>>::TriangleType::Upper);
+
+    m.set(0, 0, Complex<double>(1.0, 2.0));
+    m.set(1, 2, Complex<double>(3.0, -4.0));
+
+    EXPECT_EQ(m.get(0, 0), Complex<double>(1.0, 2.0));
+    EXPECT_EQ(m.get(1, 2), Complex<double>(3.0, -4.0));
+    EXPECT_EQ(m.get(2, 0), Complex<double>(0.0, 0.0));
+}
+
+TEST(TriangleMatrixComplexTest, ComplexNorm) {
+    TriangleMatrix<Complex<double>> m(2, TriangleMatrix<Complex<double>>::TriangleType::Lower);
+    m.set(0, 0, Complex<double>(3.0, 4.0));
+    m.set(1, 0, Complex<double>(0.0, 5.0));
+
+    EXPECT_DOUBLE_EQ(m.norm(), std::sqrt(50.0));
+}
+
+TEST(TriangleMatrixComplexTest, ComplexMultScalar) {
+    TriangleMatrix<Complex<double>> m(2, TriangleMatrix<Complex<double>>::TriangleType::Upper);
+    m.set(0, 1, Complex<double>(1.0, 2.0));
+
+    TriangleMatrix<Complex<double>>* res = m.mult_scalar(Complex<double>(0.0, 2.0));
+
+    EXPECT_EQ(res->get(0, 1), Complex<double>(-4.0, 2.0));
+    EXPECT_EQ(res->get(0, 0), Complex<double>(0.0, 0.0));
+
+    delete res;
+}

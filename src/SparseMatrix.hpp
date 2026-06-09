@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <cmath>
 #include"DynamicArray.hpp"
+#include "Complex.hpp"
 
 template <typename T>
 struct Triplet{

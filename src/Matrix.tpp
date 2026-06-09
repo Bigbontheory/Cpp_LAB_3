@@ -86,7 +86,12 @@ double Matrix<T>::norm() const {
     int total_elements = rows * cols;
     for (int i = 0; i < total_elements; ++i) {
         T val = data.get(i);
-        sum += static_cast<double>(val) * static_cast<double>(val);
+        if constexpr (std::is_same_v<T, Complex<double>> || std::is_same_v<T, Complex<float>>) {
+            sum += val.norm2();
+        }
+        else {
+            sum += static_cast<double>(val) * static_cast<double>(val);
+        }
     }
     return std::sqrt(sum);
 }

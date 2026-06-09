@@ -157,12 +157,17 @@ SparseMatrix<T>* SparseMatrix<T>::mult_scalar(const T scalar) const {
 
 template <typename T>
 double SparseMatrix<T>::norm() const {
-    double sum_of_squares = 0.0;
-    for (int i = 0; i < data.get_size(); ++i) { 
-        double val = static_cast<double>(data.get(i).value);
-        sum_of_squares += val * val;
-    }
-    return std::sqrt(sum_of_squares);
+	double sum_of_squares = 0.0;
+	for (int i = 0; i < data.get_size(); ++i) {
+		auto val = data.get(i).value;
+		if constexpr (std::is_same_v<T, Complex<double>> || std::is_same_v<T, Complex<float>>) {
+			sum_of_squares += val.norm2();
+		}
+		else {
+			sum_of_squares += static_cast<double>(val) * static_cast<double>(val);
+		}
+	}
+	return std::sqrt(sum_of_squares);
 }
 
 

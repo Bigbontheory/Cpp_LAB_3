@@ -4,7 +4,7 @@
 #include "DynamicArray.hpp"
 #include "SquareMatrix.hpp"
 #include <stdexcept>
-
+#include "Complex.hpp"
 
 
 template<typename T>
