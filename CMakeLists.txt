@@ -25,7 +25,7 @@ add_executable(matrix_tests
     "tests/DiagonalMatrix_Tests.cpp" 
     "tests/TriangleMatrix_Tests.cpp"
     "tests/SparseMatrix_Tests.cpp" 
-)
+ "tests/Vector_Tests.cpp")
 
 target_include_directories(matrix_tests PRIVATE ${SOURCE_DIRS})
 target_link_libraries(matrix_tests PRIVATE gtest_main)
